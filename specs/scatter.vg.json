@@ -1,0 +1,324 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "background": "white",
+    "padding": 5,
+    "width": 700,
+    "height": 500,
+    "style": "cell",
+    "data": [
+        {
+            "name": "Origin_store"
+        },
+        {
+            "name": "source_0",
+            "url": "https://vega.github.io/vega-lite/examples/data/cars.json",
+            "format": {
+                "type": "json"
+            },
+            "transform": [
+                {
+                    "type": "formula",
+                    "expr": "datum.Origin[0]",
+                    "as": "OriginInitial"
+                },
+                {
+                    "type": "filter",
+                    "expr": "isValid(datum[\"Horsepower\"]) && isFinite(+datum[\"Horsepower\"]) && isValid(datum[\"Miles_per_Gallon\"]) && isFinite(+datum[\"Miles_per_Gallon\"])"
+                }
+            ]
+        }
+    ],
+    "signals": [
+        {
+            "name": "unit",
+            "value": {},
+            "on": [
+                {
+                    "events": "mousemove",
+                    "update": "isTuple(group()) ? group() : unit"
+                }
+            ]
+        },
+        {
+            "name": "Origin_Origin_legend",
+            "value": null,
+            "on": [
+                {
+                    "events": [
+                        {
+                            "source": "view",
+                            "type": "click",
+                            "markname": "Origin_legend_symbols"
+                        },
+                        {
+                            "source": "view",
+                            "type": "click",
+                            "markname": "Origin_legend_labels"
+                        },
+                        {
+                            "source": "view",
+                            "type": "click",
+                            "markname": "Origin_legend_entries"
+                        }
+                    ],
+                    "update": "datum.value || item().items[0].items[0].datum.value",
+                    "force": true
+                },
+                {
+                    "events": [
+                        {
+                            "source": "view",
+                            "type": "click"
+                        }
+                    ],
+                    "update": "!event.item || !datum ? null : Origin_Origin_legend",
+                    "force": true
+                }
+            ]
+        },
+        {
+            "name": "Origin",
+            "update": "vlSelectionResolve(\"Origin_store\", \"union\", true, true)"
+        },
+        {
+            "name": "Origin_tuple",
+            "update": "Origin_Origin_legend !== null ? {fields: Origin_tuple_fields, values: [Origin_Origin_legend]} : null"
+        },
+        {
+            "name": "Origin_tuple_fields",
+            "value": [
+                {
+                    "type": "E",
+                    "field": "Origin"
+                }
+            ]
+        },
+        {
+            "name": "Origin_toggle",
+            "value": false,
+            "on": [
+                {
+                    "events": {
+                        "merge": [
+                            {
+                                "source": "view",
+                                "type": "click"
+                            }
+                        ]
+                    },
+                    "update": "event.shiftKey"
+                }
+            ]
+        },
+        {
+            "name": "Origin_modify",
+            "on": [
+                {
+                    "events": {
+                        "signal": "Origin_tuple"
+                    },
+                    "update": "modify(\"Origin_store\", Origin_toggle ? null : Origin_tuple, Origin_toggle ? null : true, Origin_toggle ? Origin_tuple : null)"
+                }
+            ]
+        }
+    ],
+    "marks": [
+        {
+            "name": "marks",
+            "type": "text",
+            "style": [
+                "text"
+            ],
+            "interactive": true,
+            "from": {
+                "data": "source_0"
+            },
+            "encode": {
+                "update": {
+                    "fill": {
+                        "scale": "color",
+                        "field": "Origin"
+                    },
+                    "opacity": [
+                        {
+                            "test": "!length(data(\"Origin_store\")) || vlSelectionTest(\"Origin_store\", datum)",
+                            "value": 1
+                        },
+                        {
+                            "value": 0.1
+                        }
+                    ],
+                    "description": {
+                        "signal": "\"Horsepower: \" + (format(datum[\"Horsepower\"], \"\")) + \"; Miles_per_Gallon: \" + (format(datum[\"Miles_per_Gallon\"], \"\")) + \"; Origin: \" + (isValid(datum[\"Origin\"]) ? datum[\"Origin\"] : \"\"+datum[\"Origin\"]) + \"; OriginInitial: \" + (isValid(datum[\"OriginInitial\"]) ? datum[\"OriginInitial\"] : \"\"+datum[\"OriginInitial\"])"
+                    },
+                    "x": {
+                        "scale": "x",
+                        "field": "Horsepower"
+                    },
+                    "y": {
+                        "scale": "y",
+                        "field": "Miles_per_Gallon"
+                    },
+                    "text": {
+                        "signal": "isValid(datum[\"OriginInitial\"]) ? datum[\"OriginInitial\"] : \"\"+datum[\"OriginInitial\"]"
+                    },
+                    "align": {
+                        "value": "center"
+                    },
+                    "baseline": {
+                        "value": "middle"
+                    }
+                }
+            }
+        }
+    ],
+    "scales": [
+        {
+            "name": "x",
+            "type": "linear",
+            "domain": {
+                "data": "source_0",
+                "field": "Horsepower"
+            },
+            "range": [
+                0,
+                {
+                    "signal": "width"
+                }
+            ],
+            "nice": true,
+            "zero": true
+        },
+        {
+            "name": "y",
+            "type": "linear",
+            "domain": {
+                "data": "source_0",
+                "field": "Miles_per_Gallon"
+            },
+            "range": [
+                {
+                    "signal": "height"
+                },
+                0
+            ],
+            "nice": true,
+            "zero": true
+        },
+        {
+            "name": "color",
+            "type": "ordinal",
+            "domain": {
+                "data": "source_0",
+                "field": "Origin",
+                "sort": true
+            },
+            "range": "category"
+        }
+    ],
+    "axes": [
+        {
+            "scale": "x",
+            "orient": "bottom",
+            "gridScale": "y",
+            "grid": true,
+            "tickCount": {
+                "signal": "ceil(width/40)"
+            },
+            "domain": false,
+            "labels": false,
+            "aria": false,
+            "maxExtent": 0,
+            "minExtent": 0,
+            "ticks": false,
+            "zindex": 0
+        },
+        {
+            "scale": "y",
+            "orient": "left",
+            "gridScale": "x",
+            "grid": true,
+            "tickCount": {
+                "signal": "ceil(height/40)"
+            },
+            "domain": false,
+            "labels": false,
+            "aria": false,
+            "maxExtent": 0,
+            "minExtent": 0,
+            "ticks": false,
+            "zindex": 0
+        },
+        {
+            "scale": "x",
+            "orient": "bottom",
+            "grid": false,
+            "title": "Horsepower",
+            "labelFlush": true,
+            "labelOverlap": true,
+            "tickCount": {
+                "signal": "ceil(width/40)"
+            },
+            "zindex": 0
+        },
+        {
+            "scale": "y",
+            "orient": "left",
+            "grid": false,
+            "title": "Miles_per_Gallon",
+            "labelOverlap": true,
+            "tickCount": {
+                "signal": "ceil(height/40)"
+            },
+            "zindex": 0
+        }
+    ],
+    "legends": [
+        {
+            "fill": "color",
+            "symbolType": "circle",
+            "title": "Origin",
+            "encode": {
+                "labels": {
+                    "name": "Origin_legend_labels",
+                    "interactive": true,
+                    "update": {
+                        "opacity": [
+                            {
+                                "test": "(!length(data(\"Origin_store\")) || (Origin[\"Origin\"] && indexof(Origin[\"Origin\"], datum.value) >= 0))",
+                                "value": 1
+                            },
+                            {
+                                "value": 0.35
+                            }
+                        ]
+                    }
+                },
+                "symbols": {
+                    "name": "Origin_legend_symbols",
+                    "interactive": true,
+                    "update": {
+                        "opacity": [
+                            {
+                                "test": "(!length(data(\"Origin_store\")) || (Origin[\"Origin\"] && indexof(Origin[\"Origin\"], datum.value) >= 0))",
+                                "value": 1
+                            },
+                            {
+                                "value": 0.35
+                            }
+                        ]
+                    }
+                },
+                "entries": {
+                    "name": "Origin_legend_entries",
+                    "interactive": true,
+                    "update": {
+                        "fill": {
+                            "value": "transparent"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

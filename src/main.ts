@@ -1,0 +1,57 @@
+import { Config, TopLevelSpec, compile } from 'vega-lite';
+
+const vegaLiteSpec: TopLevelSpec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": {
+        "url": "https://vega.github.io/vega-lite/examples/data/cars.json"
+    },
+    "transform": [
+        {
+            "calculate": "datum.Origin[0]",
+            "as": "OriginInitial"
+        }
+    ],
+    "mark": "text",
+    "encoding": {
+        "x": {
+            "field": "Horsepower",
+            "type": "quantitative"
+        },
+        "y": {
+            "field": "Miles_per_Gallon",
+            "type": "quantitative"
+        },
+        "color": {
+            "field": "Origin",
+            "type": "nominal"
+        },
+        "text": {
+            "field": "OriginInitial",
+            "type": "nominal"
+        },
+        "opacity": {
+            "condition": {
+                "param": "Origin",
+                "value": 1
+            },
+            "value": 0.1
+        }
+    },
+    "width": 700,
+    "height": 500,
+    "params": [
+        {
+            "name": "Origin",
+            "select": {
+                "type": "point",
+                "fields": [
+                    "Origin"
+                ]
+            },
+            "bind": "legend"
+        }
+    ]
+};
+
+const vegaSpec = compile(vegaLiteSpec).spec;
+console.log(JSON.stringify(vegaSpec));
