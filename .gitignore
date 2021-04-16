@@ -7,3 +7,7 @@ Thumbs.db
 
 # Ignore built ts files
 dist/**/*
+
+# Project-specific
+output/**/*
+!output/.gitkeep

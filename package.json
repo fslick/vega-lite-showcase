@@ -1,7 +1,12 @@
 {
   "dependencies": {
     "canvas": "^2.7.0",
+    "fs": "^0.0.1-security",
+    "typescript": "^4.2.4",
     "vega": "^5.20.2",
     "vega-lite": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.41"
   }
 }

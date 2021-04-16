@@ -5,7 +5,7 @@
     },
     "transform": [
         {
-            "calculate": "datum.Origin[0] + datum.Origin[1]",
+            "calculate": "datum.Origin[0]",
             "as": "OriginInitial"
         }
     ],
@@ -21,15 +21,32 @@
         },
         "color": {
             "field": "Origin",
-            "scale": {"range": ["purple", "#ff0000", "teal"]}
+            "type": "nominal"
         },
         "text": {
-            "field": "OriginInitial"
+            "field": "OriginInitial",
+            "type": "nominal"
+        },
+        "opacity": {
+            "condition": {
+                "param": "Origin",
+                "value": 1
+            },
+            "value": 0.1
         }
     },
     "width": 700,
-    "height": 500,"params": [{
-        "name": "origin-param",
-        "select": {"type": "point", "fields": ["origin"]},"bind": {"legend": "click"}}
-      ]
+    "height": 500,
+    "params": [
+        {
+            "name": "Origin",
+            "select": {
+                "type": "point",
+                "fields": [
+                    "Origin"
+                ]
+            },
+            "bind": "legend"
+        }
+    ]
 }

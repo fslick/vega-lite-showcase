@@ -1,4 +1,7 @@
 import { Config, TopLevelSpec, compile } from 'vega-lite';
+import { createFolder, log, overwriteFile } from './lib/common';
+
+const chartName = "scatter-interactive";
 
 const vegaLiteSpec: TopLevelSpec = {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -7,7 +10,7 @@ const vegaLiteSpec: TopLevelSpec = {
     },
     "transform": [
         {
-            "calculate": "datum.Origin[0]",
+            "calculate": "datum.Origin[0] + datum.Origin[1]",
             "as": "OriginInitial"
         }
     ],
@@ -23,7 +26,14 @@ const vegaLiteSpec: TopLevelSpec = {
         },
         "color": {
             "field": "Origin",
-            "type": "nominal"
+            "type": "nominal",
+            "scale": {
+                "range": [
+                    "purple",
+                    "#ff0000",
+                    "teal"
+                ]
+            }
         },
         "text": {
             "field": "OriginInitial",
@@ -31,7 +41,7 @@ const vegaLiteSpec: TopLevelSpec = {
         },
         "opacity": {
             "condition": {
-                "param": "Origin",
+                "param": "origin-param",
                 "value": 1
             },
             "value": 0.1
@@ -41,7 +51,7 @@ const vegaLiteSpec: TopLevelSpec = {
     "height": 500,
     "params": [
         {
-            "name": "Origin",
+            "name": "origin-param",
             "select": {
                 "type": "point",
                 "fields": [
@@ -53,5 +63,17 @@ const vegaLiteSpec: TopLevelSpec = {
     ]
 };
 
+
+const folderpath = `output/${chartName}`;
+createFolder(folderpath);
+
+const vegaLiteSpecPath = `${folderpath}/${chartName}.vl.json`;
+overwriteFile(vegaLiteSpecPath, JSON.stringify(vegaLiteSpec));
+log(`Vega-Lite spec: ${vegaLiteSpecPath}`);
+
 const vegaSpec = compile(vegaLiteSpec).spec;
-console.log(JSON.stringify(vegaSpec));
+const vegaSpecPath = `${folderpath}/${chartName}.vg.json`;
+overwriteFile(vegaSpecPath, JSON.stringify(vegaSpec));
+log(`Vega spec: ${vegaSpecPath}`);
+
+log("done");
