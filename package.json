@@ -1,12 +1,16 @@
 {
   "dependencies": {
+    "async-file": "^2.0.2",
     "canvas": "^2.7.0",
+    "country-code-lookup": "^0.0.19",
+    "csv-parser": "^3.0.0",
     "fs": "^0.0.1-security",
     "typescript": "^4.2.4",
     "vega": "^5.20.2",
     "vega-lite": "^5.0.0"
   },
   "devDependencies": {
+    "@types/country-list": "^2.1.0",
     "@types/node": "^14.14.41"
   }
 }

@@ -1,0 +1,93 @@
+Rank,Country,City,Buying_Price_US _$ per_Sq_M.,Rent_per_Month_US_$,Price/Rent_ Ratio,%_of_house_price_change_last_year,%_of_house_price_change_last_5 years,%_of_house_price_change_last_10 years
+1,China,Hong Kong Island,28570,7267,43,15.86,60.05,207.58
+2,UK,London,26262,6504,36,2.19,28.26,22.96
+3,US,New York,17191,4942,34,6.47,32.86,28.18
+4,Israel,Tel Aviv,17149,4591,37,-0.49,26.98,113.53
+5,Japan,Tokyo,16322,4346,38,4.62,29.85,28.15
+6,France,Paris,15867,3965,36,3.12,1.39,1.49
+7,Singapore,Singapore,14373,4736,30,9.08,-3.25,17.42
+8,Austria,Vienna,14333,2210,51,4.23,17.04,85.9
+9,Switzerland,Geneva,14230,4258,30,-2.54,3.42,31.75
+10,China,Shanghai,11829,2479,48,-1.82,41.45,64.56
+11,Canada,Toronto,10947,4276,26,2.87,42.56,68.67
+12,India,Mumbai,10932,2537,43,6.69,60.57,
+13,Australia,Sydney,10711,2701,40,2.02,42.19,61.45
+14,Taiwan,Taipei,10373,2142,49,1.13,2.53,74.38
+15,Norway,Oslo,10268,2844,32,1.66,23.96,61.67
+16,Sweden,Stockholm,8669,,,,40.04,55.38
+17,Netherlands,Amsterdam,8558,2859,27,8.86,26.93,1.93
+18,Czech Republic,Prague,8293,1168,32,10.66,39.46,
+19,Finland,Helsinki,8195,3024,24,1.41,1.7,
+20,Italy,Rome,8170,2875,26,-0.4,-10.69,-17.08
+21,Russia,Moscow,7818,2015,22,1.55,-4.33,-2.27
+22,Germany,Berlin,7325,1452,34,3.89,32.87,54.79
+23,United Kingdom,Bermuda,7056,5597,21,,,
+24,United Kingdom,Tortola,6469,3071,35,,,
+25,Spain,Madrid,6173,2215,25,6.38,3.31,-33.57
+26,UAE,Dubai,5918,3070,19,-6.41,11.96,
+27,Luxembourg,Luxembourg,5710,2175,23,5.17,36.1,44.93
+28,Turkey,Istanbul,5680,987,52,10.53,92.31,
+29,Malta,Valleta,5674,1714,30,13.59,58.07,51.88
+30,Denmark,Copenhagen,5306,2304,21,4.93,23.69,3.6
+31,Thailand,Bangkok,5266,1373,19,6.33,16.29,48.65
+32,Brazil,Sao Paolo,4833,1576,31,1.91,21.83,210.96
+33,Portugal,Lisbon,4749,1756,18,6.12,16.37,
+34,Slovenia,Ljubljana,4535,1909,21,15.93,21.44,-1.5
+35,Greece,Athens,4488,1600,25,0.98,-15.55,-42.07
+36,Barbados,St James,4467,,,,,
+37,South Africa,Cape Town,4214,1636,26,9.18,26.83,43.78
+38,Cayman Is.,Grand Cayman,4163,3018,14,,,
+39,Estonia,Tallinn,3956,1736,20,7.88,55.77,23.18
+40,Philippines,Metro Manila,3952,2422,16,10.07,63.91,107.58
+41,Belgium,Brussels,3932,1608,22,2.46,7.97,22.11
+42,Turks and Caicos Is.,Providenciales,3884,,,,,
+43,Lebanon,Beirut,3693,2082,22,,,
+44,Argentina,Buenos Aires,3660,896,41,,,
+45,Bahamas,Bahamas,3632,2964,12,,,
+46,Andorra,Andorra,3615,920,32,,,
+47,Slovakia,Bratislava,3610,1469,22,4.53,16.34,-7.62
+48,Panama,Panama City,3606,2075,17,,,
+49,Antigua,Antigua,3501,,,,,
+50,St. Kitts,St. Kitts,3496,1712,20,,,
+51,Ukraine,Kiev,3481,2837,11,-5.31,-45.55,-69.7
+52,Poland,Warsaw,3463,1708,18,6.94,17.56,-0.65
+53,Latvia,Riga,3458,1259,25,3.72,23.54,-38.84
+54,Malaysia,Kuala Lumpur,3441,1281,27,4.09,43.35,
+55,New Zealand,Auckland,3438,1885,18,5.86,42.13,64.71
+56,Chile,Santiago,3256,1336,24,6.02,52.74,108.72
+57,US,St. Croix,3235,,,6.47,32.86,28.18
+58,Hungary,Budapest,3119,1467,19,0.6,38.58,
+59,Martinique,Fort-de-France,2979,1524,20,,,
+60,France,Grande-Terre,2940,1680,18,,,
+61,Cambodia,Phnom Phen,2913,1553,19,,,
+62,Mexico,Mexico City,2834,1183,24,9.92,39.57,73.71
+63,Uruguay,Montevideo,2794,1385,20,,,
+64,Serbia,Serbia,2776,1106,23,2.2,-5.15,59.8
+65,Peru,Lima,2713,1075,21,-1.73,18.03,183.61
+66,Lithuania,Vilnius,2682,1297,19,2.5,23.31,-23.6
+67,Indonesia,Jakarta,2595,1840,14,3.27,25.34,60.05
+68,Croatia,Zagreb,2453,1195,18,8.86,8.67,-10.89
+69,Trinidad,Trinidad,2334,1607,15,,,
+70,Belize,Ambergris Caye,2322,,,,,
+71,Vietnam,HCMC,2280,988,23,0.32,0.65,
+72,Colombia,Bogota,2189,1379,16,5.26,47.13,133.45
+73,Romania,Bucharest,2109,502,17,7.14,28.48,-36.37
+74,Cyprus,Limassol,2081,885,21,1.5,-16.93,-21.88
+75,Dom. Rep.,Puerto Plata,2078,,,,,
+76,Bulgaria,Sophia,2062,947,20,7.09,25.68,-14.48
+77,Costa Rica,San Jose,1938,1450,13,,,
+78,St Lucia,St Lucia,1860,1108,28,,,
+79,Montenegro,Coastal Areas,1736,1173,13,10.67,-6.74,
+80,Kenya,Nairobi,1687,1123,15,,,
+81,Morocco,Marrakesh,1549,854,18,7.34,8.43,17.12
+82,Aruba,Malmok/Bakvalet,1455,1774,14,,,
+83,Jordan,Amman,1455,1605,11,,,
+84,Macedonia,Skopje,1406,628,20,5.27,1.4,1.11
+85,Jamaica,Kingston,1404,1369,10,,,
+86,Ecuador,Quito,1320,1115,15,,,
+87,Cape Verde,Praia,1300,,,,,
+88,El Salvador,San Salvador,1193,1013,12,,,
+89,Puerto Rico,San Juan,1007,717,14,4.88,-10.15,-22.47
+90,Nicaragua,Managua,893,1146,13,,,
+91,Egypt,Cairo,831,977,11,,,
+92,Tanzania,Dar es Salaam,700,500,12,,,

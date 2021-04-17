@@ -1,7 +1,7 @@
 import { Config, TopLevelSpec, compile } from 'vega-lite';
-import { createFolder, log, overwriteFile } from './lib/common';
+import { createFolderSync, log, overwriteFileSync } from './lib/common';
 
-const chartName = "scatter-interactive";
+const chartName = "cars-scatter-interactive";
 
 const vegaLiteSpec: TopLevelSpec = {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -63,17 +63,16 @@ const vegaLiteSpec: TopLevelSpec = {
     ]
 };
 
-
 const folderpath = `output/${chartName}`;
-createFolder(folderpath);
+createFolderSync(folderpath);
 
 const vegaLiteSpecPath = `${folderpath}/${chartName}.vl.json`;
-overwriteFile(vegaLiteSpecPath, JSON.stringify(vegaLiteSpec));
+overwriteFileSync(vegaLiteSpecPath, JSON.stringify(vegaLiteSpec));
 log(`Vega-Lite spec: ${vegaLiteSpecPath}`);
 
 const vegaSpec = compile(vegaLiteSpec).spec;
 const vegaSpecPath = `${folderpath}/${chartName}.vg.json`;
-overwriteFile(vegaSpecPath, JSON.stringify(vegaSpec));
+overwriteFileSync(vegaSpecPath, JSON.stringify(vegaSpec));
 log(`Vega spec: ${vegaSpecPath}`);
 
 log("done");
