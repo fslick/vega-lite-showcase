@@ -1,5 +1,5 @@
 import { Config, TopLevelSpec, compile } from "vega-lite";
-import { createFolderSync, log, overwriteFileSync, parseCsvFile as parseCsv } from "./lib/common";
+import { createFolderSync, log, overwriteFileSync, parseCsv as parseCsv } from "./lib/common";
 import * as lookup from "country-code-lookup";
 
 const chartName = "spi-intl-scatter";
