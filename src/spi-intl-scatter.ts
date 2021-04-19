@@ -1,5 +1,5 @@
 import { Config, TopLevelSpec, compile } from "vega-lite";
-import { createFolderSync, log, overwriteFileSync, parseCsv as parseCsv } from "./lib/common";
+import { createFolderSync, log, overwriteFileSync, parseCsvFile as parseCsvFile } from "./lib/common";
 import * as lookup from "country-code-lookup";
 
 const chartName = "spi-intl-scatter";
@@ -8,7 +8,7 @@ type Header = "rank" | "name" | "confed" | "off" | "def" | "spi";
 type Row = Record<Header, string>;
 
 async function main() {
-    const csv = await parseCsv<Row>("./data/spi_global_rankings_intl.csv");
+    const csv = await parseCsvFile<Row>("./data/spi_global_rankings_intl.csv");
     const data = csv.map(r => ({ ...r, countryCode: lookup.byCountry(r.name)?.iso2 }))
         .filter(r => r.countryCode)
         .slice(0, 48);

@@ -19,7 +19,7 @@ export function createFolderSync(folderpath: string) {
     }
 }
 
-export async function parseCsv<T>(csvPath: string): Promise<T[]> {
+export async function parseCsvFile<T>(csvPath: string): Promise<T[]> {
     console.log("Parsing: ", csvPath);
     const results: T[] = [];
     return new Promise((resolve, reject) => {

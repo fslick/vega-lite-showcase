@@ -1,5 +1,5 @@
 import { Config, TopLevelSpec, compile } from "vega-lite";
-import { createFolderSync, log, overwriteFileSync, parseCsv } from "./lib/common";
+import { createFolderSync, log, overwriteFileSync, parseCsvFile } from "./lib/common";
 import * as lookup from "country-code-lookup";
 // import * as flag from "emoji-flag";
 
@@ -21,22 +21,11 @@ type Header = "Rank"
 type Row = Record<Header, string>;
 
 let rows: Row[] | undefined = undefined
-async function parseData() {
+async function parseCsv() {
     if (!rows) {
-        rows = await parseCsv<Row>("./data/real_estate.csv");
+        rows = await parseCsvFile<Row>("./data/real_estate.csv");
     }
-    const data = rows
-        .map(r => ({
-            "Country": r.Country,
-            "City": r.City,
-            "Buying Price per m² ($)": r["Buying_Price_US _$ per_Sq_M."],
-            "Rent per Month ($)": r.Rent_per_Month_US_$,
-            "Continent": lookup.byCountry(r.Country)!.continent,
-            "Region": lookup.byCountry(r.Country)!.region,
-            "Flag": flag(lookup.byCountry(r.Country)!.iso2)
-        }))
-        .filter(r => Object.keys(r).every((p => r[(p as keyof typeof r)])));
-    return data;
+    return rows;
 }
 
 function compileAndSaveSpecs(spec: TopLevelSpec, chartName: string) {
@@ -56,7 +45,18 @@ function compileAndSaveSpecs(spec: TopLevelSpec, chartName: string) {
 async function interactiveChart() {
     const chartName = "real-estate-interactive";
 
-    const data = await parseData();
+    const csv = await parseCsv();
+    const data = csv
+        .map(r => ({
+            "Country": r.Country,
+            "City": r.City,
+            "Buying Price per m² ($)": r["Buying_Price_US _$ per_Sq_M."],
+            "Rent per Month ($)": r.Rent_per_Month_US_$,
+            "Continent": lookup.byCountry(r.Country)!.continent,
+            "Flag": flag(lookup.byCountry(r.Country)!.iso2)
+        }))
+        .filter(r => Object.keys(r).every((p => r[(p as keyof typeof r)])))
+        .slice(0, 32);
 
     const vegaLiteSpec: TopLevelSpec = {
         $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -69,17 +69,25 @@ async function interactiveChart() {
         encoding: {
             x: {
                 field: "Rent per Month ($)",
-                type: "quantitative"
+                type: "quantitative",
+                axis: {
+                    gridDash: [4, 4]
+                },
             },
             y: {
                 field: "Buying Price per m² ($)",
                 type: "quantitative",
+                axis: {
+                    gridDash: [4, 4]
+                }
             },
             color: { field: "Continent" },
             tooltip: [
                 { field: "City" },
                 { field: "Country" },
-                { field: "Rent per Month ($)", type: "quantitative" }],
+                { field: "Buying Price per m² ($)", type: "quantitative" },
+                { field: "Rent per Month ($)", type: "quantitative" }
+            ],
             text: { field: "Flag" },
             opacity: {
                 condition: {
@@ -101,8 +109,24 @@ async function interactiveChart() {
         ],
         width: 600,
         height: 600,
+        title: {
+            text: "The most expensive cities in the world to buy real estate",
+            subtitle: "Hover on the mark to find out more information or highlight the Continent by clicking on its name",
+            align: "left",
+            anchor: "start"
+
+        },
         config: {
             legend: {
+                titleFontSize: 11,
+                labelFontSize: 11
+            },
+            title: {
+                fontSize: 14,
+                subtitleFontSize: 11
+            },
+            view: {
+                stroke: null
             }
         }
     }
@@ -113,9 +137,9 @@ async function interactiveChart() {
 async function representativeScatter() {
     const chartName = "real-estate-scatter";
 
-    const data = await parseData();
+    const data = await parseCsv();
 
-   const vegaLiteSpec: TopLevelSpec = {
+    const vegaLiteSpec: TopLevelSpec = {
         $schema: "https://vega.github.io/schema/vega-lite/v5.json",
         encoding: {
             x: {
@@ -205,7 +229,10 @@ async function representativeScatter() {
 
 async function main() {
     await interactiveChart();
+    console.log("");
+
     await representativeScatter();
+    console.log("");
     log("done");
 }
 main();
