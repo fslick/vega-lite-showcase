@@ -63,7 +63,6 @@ async function interactiveChart() {
         data: { values: data },
         mark: {
             type: "text",
-            filled: true,
             fontSize: 18
         },
         encoding: {
@@ -137,90 +136,114 @@ async function interactiveChart() {
 async function representativeScatter() {
     const chartName = "real-estate-scatter";
 
-    const data = await parseCsv();
+    const rows = await parseCsv();
+    const data = rows
+        .map(r => ({
+            "Country": r.Country,
+            "City": r.City,
+            "Continent": lookup.byCountry(r.Country)!.continent,
+            "Buying Price per m² ($)": r["Buying_Price_US _$ per_Sq_M."],
+            "Rent per Month ($)": r.Rent_per_Month_US_$,
+        }))
+        .filter(r => Object.keys(r).every((p => r[(p as keyof typeof r)])));
+
+    const highlightedData = [
+        "Hong Kong",
+        "London",
+        "New York",
+        "Tokyo",
+        "Paris",
+        "Singapore",
+        "Vienna",
+        "Shanghai",
+        "Toronto",
+        "Sydney",
+        "Prague",
+        "Moscow",
+        "Bermuda",
+        "Madrid",
+        "Dubai",
+        "Istanbul",
+        "Bucharest",
+        "Cape Town"
+    ].map(city => data.find(r => r.City === city)).filter(r => !!r);
+    const generalData = data
+        .filter(r => !highlightedData.map(d => d!.City).includes(r.City));
 
     const vegaLiteSpec: TopLevelSpec = {
         $schema: "https://vega.github.io/schema/vega-lite/v5.json",
         encoding: {
             x: {
                 field: "Rent per Month ($)",
-                type: "quantitative"
+                type: "quantitative",
+                axis: { gridDash: [4, 4] },
             },
             y: {
                 field: "Buying Price per m² ($)",
                 type: "quantitative",
+                axis: { gridDash: [4, 4] }
             },
-            color: { field: "Continent" },
             tooltip: [
                 { field: "City" },
                 { field: "Country" },
-                { field: "Rent per Month ($)", type: "quantitative" },
-                { field: "Buying Price per m² ($)", type: "quantitative" }
+                { field: "Continent" },
+                { field: "Buying Price per m² ($)", type: "quantitative" },
+                { field: "Rent per Month ($)", type: "quantitative" }
             ]
         },
-        params: [
-        ],
         layer: [{
-            data: { values: data },
+            data: { values: generalData },
             mark: {
                 type: "point",
                 filled: true,
-                size: 60
+                color: "grey",
+                opacity: 0.35,
+                size: 75
+            }
+        }, {
+            data: { values: highlightedData },
+            mark: {
+                type: "point",
+                filled: true,
+                opacity: 1,
+                size: 75
             },
             encoding: {
-                opacity: {
-                    condition: {
-                        param: "continent-selected-2",
-                        value: 1
-                    },
-                    value: 0.067
+                color: {
+                    field: "Continent",
+                    scale: { range: ["#ffbf00", "#e86af0", "#ee4035", "#0392cf", "#028900"] }
                 }
-            },
-            params: [
-                {
-                    name: "continent-selected-2",
-                    select: {
-                        type: "point",
-                        fields: ["Continent"]
-                    },
-                    bind: "legend"
-                }
-            ]
+            }
         }, {
-            data: { values: data },
+            data: { values: highlightedData },
             mark: {
                 type: "text",
                 align: "center",
-                dy: -10
+                dy: -11
             },
             encoding: {
-                text: {
-                    field: "Flag",
-                },
-                opacity: {
-                    condition: {
-                        param: "continent-selected-1",
-                        value: 1
-                    },
-                    value: 0.067
-                }
-            },
-            params: [
-                {
-                    name: "continent-selected-1",
-                    select: {
-                        type: "point",
-                        fields: ["Continent"]
-                    },
-                    bind: "legend"
-                }
-            ]
+                text: { field: "City" },
+                tooltip: null
+            }
         }],
-        width: 500,
-        height: 500,
+        width: 600,
+        height: 600,
+        title: {
+            text: "The most expensive cities in the world to buy real estate",
+            subtitle: "You can hover over the dots to find out more information",
+            align: "left",
+            anchor: "start"
+        },
         config: {
             legend: {
-            }
+                titleFontSize: 11,
+                labelFontSize: 11
+            },
+            title: {
+                fontSize: 14,
+                subtitleFontSize: 11
+            },
+            view: { stroke: null }
         }
     }
 
