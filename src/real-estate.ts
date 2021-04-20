@@ -1,9 +1,7 @@
 import { Config, TopLevelSpec, compile } from "vega-lite";
 import { createFolderSync, log, overwriteFileSync, parseCsvFile } from "./lib/common";
 import * as lookup from "country-code-lookup";
-// import * as flag from "emoji-flag";
-
-var flag = require('emoji-flag'); // TODO typings
+import flag from "emoji-flag";
 
 // Dataset: https://datahub.io/stellamaris.sotomayor/real_estate-prices-worldwide
 
