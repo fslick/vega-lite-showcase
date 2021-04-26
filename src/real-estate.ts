@@ -1,5 +1,5 @@
 import { Config, TopLevelSpec, compile } from "vega-lite";
-import { createFolderSync, log, overwriteFileSync, parseCsvFile } from "./lib/common";
+import {  UnwrapArray, createFolder, log, overwriteFile, parseCsvFile } from "./lib/common";
 import * as lookup from "country-code-lookup";
 import flag from "emoji-flag";
 
@@ -26,17 +26,17 @@ async function parseCsv() {
     return rows;
 }
 
-function compileAndSaveSpecs(spec: TopLevelSpec, chartName: string) {
+async function compileAndSaveSpecs(spec: TopLevelSpec, chartName: string) {
     const folderpath = `output/${projectName}`;
-    createFolderSync(folderpath);
+    await createFolder(folderpath);
 
     const vegaLiteSpecPath = `${folderpath}/${chartName}.vl.json`;
-    overwriteFileSync(vegaLiteSpecPath, JSON.stringify(spec));
+    await overwriteFile(vegaLiteSpecPath, JSON.stringify(spec));
     log(`Vega-Lite spec: ${vegaLiteSpecPath}`);
 
     const vegaSpec = compile(spec).spec;
     const vegaSpecPath = `${folderpath}/${chartName}.vg.json`;
-    overwriteFileSync(vegaSpecPath, JSON.stringify(vegaSpec));
+    await overwriteFile(vegaSpecPath, JSON.stringify(vegaSpec));
     log(`Vega spec: ${vegaSpecPath}`);
 }
 
@@ -145,6 +145,7 @@ async function representativeScatter() {
         }))
         .filter(r => Object.keys(r).every((p => r[(p as keyof typeof r)])));
 
+    const keyProperty: keyof UnwrapArray<typeof data> = "City";
     const highlightedData = [
         "Hong Kong",
         "London",
@@ -164,9 +165,9 @@ async function representativeScatter() {
         "Istanbul",
         "Bucharest",
         "Cape Town"
-    ].map(city => data.find(r => r.City === city)).filter(r => !!r);
+    ].map(key => data.find(r => r[keyProperty] === key)!).filter(r => !!r);
     const generalData = data
-        .filter(r => !highlightedData.map(d => d!.City).includes(r.City));
+        .filter(r => !highlightedData.map(d => d[keyProperty]).includes(r[keyProperty]));
 
     const vegaLiteSpec: TopLevelSpec = {
         $schema: "https://vega.github.io/schema/vega-lite/v5.json",

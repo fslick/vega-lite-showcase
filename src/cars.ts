@@ -1,5 +1,5 @@
 import { Config, TopLevelSpec, compile } from 'vega-lite';
-import { createFolderSync, log, overwriteFileSync } from './lib/common';
+import { createFolder, log, overwriteFile } from './lib/common';
 
 const chartName = "cars-scatter-interactive";
 
@@ -62,17 +62,18 @@ const vegaLiteSpec: TopLevelSpec = {
         }
     ]
 };
+(async () => {
+    const folderpath = `output/${chartName}`;
+    await createFolder(folderpath);
 
-const folderpath = `output/${chartName}`;
-createFolderSync(folderpath);
+    const vegaLiteSpecPath = `${folderpath}/${chartName}.vl.json`;
+    await overwriteFile(vegaLiteSpecPath, JSON.stringify(vegaLiteSpec));
+    log(`Vega-Lite spec: ${vegaLiteSpecPath}`);
 
-const vegaLiteSpecPath = `${folderpath}/${chartName}.vl.json`;
-overwriteFileSync(vegaLiteSpecPath, JSON.stringify(vegaLiteSpec));
-log(`Vega-Lite spec: ${vegaLiteSpecPath}`);
+    const vegaSpec = compile(vegaLiteSpec).spec;
+    const vegaSpecPath = `${folderpath}/${chartName}.vg.json`;
+    await overwriteFile(vegaSpecPath, JSON.stringify(vegaSpec));
+    log(`Vega spec: ${vegaSpecPath}`);
 
-const vegaSpec = compile(vegaLiteSpec).spec;
-const vegaSpecPath = `${folderpath}/${chartName}.vg.json`;
-overwriteFileSync(vegaSpecPath, JSON.stringify(vegaSpec));
-log(`Vega spec: ${vegaSpecPath}`);
-
-log("done");
+    log("done");
+})();

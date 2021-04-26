@@ -1,5 +1,5 @@
 import { Config, TopLevelSpec, compile } from "vega-lite";
-import { createFolderSync, log, overwriteFileSync, parseCsvFile as parseCsvFile } from "./lib/common";
+import { createFolder, log, overwriteFile, parseCsvFile as parseCsvFile } from "./lib/common";
 import * as lookup from "country-code-lookup";
 
 const chartName = "spi-intl-scatter";
@@ -40,15 +40,15 @@ async function main() {
     }
 
     const folderpath = `output/${chartName}`;
-    createFolderSync(folderpath);
+    await createFolder(folderpath);
 
     const vegaLiteSpecPath = `${folderpath}/${chartName}.vl.json`;
-    overwriteFileSync(vegaLiteSpecPath, JSON.stringify(vegaLiteSpec));
+    await overwriteFile(vegaLiteSpecPath, JSON.stringify(vegaLiteSpec));
     log(`Vega-Lite spec: ${vegaLiteSpecPath}`);
 
     const vegaSpec = compile(vegaLiteSpec).spec;
     const vegaSpecPath = `${folderpath}/${chartName}.vg.json`;
-    overwriteFileSync(vegaSpecPath, JSON.stringify(vegaSpec));
+    await overwriteFile(vegaSpecPath, JSON.stringify(vegaSpec));
     log(`Vega spec: ${vegaSpecPath}`);
 
     log("done");

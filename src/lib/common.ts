@@ -1,21 +1,24 @@
-import * as fs from "fs";
-import * as fsAsync from "async-file";
+import * as fs from "async-file";
 import parse from "csv-parser";
+
+export type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 
 export function log(text: string) {
     console.log(text);
 }
 
-export function overwriteFileSync(filepath: string, text: string) {
-    if (fs.existsSync(filepath)) {
-        fs.rmSync(filepath);
+export async function overwriteFile(filepath: string, text: string) {
+    const fileExists = await fs.exists(filepath);
+    if (!fileExists) {
+        await fs.delete(filepath);
     }
-    fs.writeFileSync(filepath, text);
+    await fs.writeFile(filepath, text);
 }
 
-export function createFolderSync(folderpath: string) {
-    if (!fs.existsSync(folderpath)) {
-        fs.mkdirSync(folderpath);
+export async function createFolder(folderpath: string) {
+    const folderExists = await fs.exists(folderpath);
+    if (!folderExists) {
+        await fs.createDirectory(folderpath);
     }
 }
 
