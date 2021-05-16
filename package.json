@@ -5,6 +5,7 @@
     "country-code-lookup": "^0.0.19",
     "csv-parser": "^3.0.0",
     "emoji-flag": "^1.1.0",
+    "moment": "^2.29.1",
     "vega": "^5.20.2",
     "vega-lite": "^5.0.0"
   },

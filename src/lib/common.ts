@@ -1,10 +1,12 @@
 import * as fs from "async-file";
+import moment from "moment";
 import parse from "csv-parser";
 
 export type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 
 export function log(text: string) {
-    console.log(text);
+    const timestamp = moment().format("HH:mm:ss.SSS");
+    console.log(timestamp + " >> " + text);
 }
 
 export async function overwriteFile(filepath: string, text: string) {
@@ -23,7 +25,6 @@ export async function createFolder(folderpath: string) {
 }
 
 export async function parseCsvFile<T>(csvPath: string): Promise<T[]> {
-    console.log("Parsing: ", csvPath);
     const results: T[] = [];
     return new Promise((resolve, reject) => {
         fs.createReadStream(csvPath)
