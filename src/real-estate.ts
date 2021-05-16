@@ -1,5 +1,5 @@
 import { Config, TopLevelSpec, compile } from "vega-lite";
-import {  UnwrapArray, createFolder, log, overwriteFile, parseCsvFile } from "./lib/common";
+import { UnwrapArray, createFolder, log, overwriteFile, parseCsvFile } from "./lib/common";
 import * as lookup from "country-code-lookup";
 import flag from "emoji-flag";
 
@@ -128,7 +128,7 @@ async function interactiveChart() {
         }
     }
 
-    compileAndSaveSpecs(vegaLiteSpec, chartName);
+    await compileAndSaveSpecs(vegaLiteSpec, chartName);
 }
 
 async function representativeScatter() {
@@ -164,7 +164,10 @@ async function representativeScatter() {
         "Dubai",
         "Istanbul",
         "Bucharest",
-        "Cape Town"
+        "Cape Town",
+        "Taipei",
+        "Berlin",
+        "Geneva"
     ].map(key => data.find(r => r[keyProperty] === key)!).filter(r => !!r);
     const generalData = data
         .filter(r => !highlightedData.map(d => d[keyProperty]).includes(r[keyProperty]));
@@ -225,7 +228,7 @@ async function representativeScatter() {
                 tooltip: null
             }
         }],
-        width: 600,
+        width: 900,
         height: 600,
         title: {
             text: "The most expensive cities in the world to buy real estate",
@@ -246,7 +249,94 @@ async function representativeScatter() {
         }
     }
 
-    compileAndSaveSpecs(vegaLiteSpec, chartName);
+    await compileAndSaveSpecs(vegaLiteSpec, chartName);
+}
+
+async function priceChangeBarChart() {
+    const chartName = "real-estate-bar-chart";
+
+    const csv = (await parseCsv()).filter(r => r["Buying_Price_US _$ per_Sq_M."] && r["%_of_house_price_change_last_year"] && r["%_of_house_price_change_last_5 years"]);
+    const raw = csv
+        .map(r => {
+            const value = +r["Buying_Price_US _$ per_Sq_M."];
+            const fiveYearsDelta = +r["%_of_house_price_change_last_5 years"] * +r["Buying_Price_US _$ per_Sq_M."] / 100;
+            return {
+                city: r.City,
+                country: r.Country,
+                value: value,
+                oneYearChange: +r["%_of_house_price_change_last_year"],
+                fiveYearsChange: +r["%_of_house_price_change_last_5 years"],
+                base: fiveYearsDelta > 0 ? value - fiveYearsDelta : value,
+                delta: fiveYearsDelta
+            };
+        }).sort((a, b) => b.value - a.value);
+    const bases =
+        raw.map(r => {
+            return {
+                city: r.city,
+                value: r.base,
+                type: "base",
+                typeOrder: 1
+            };
+        });
+    const deltas =
+        raw.map(r => {
+            return {
+                city: r.city,
+                value: Math.abs(r.delta),
+                type: r.delta > 0 ? "increase" : "decrease",
+                typeOrder: 2
+            };
+        });
+
+    const data = [...bases, ...deltas].sort((a, b) => raw.findIndex(e => e.city === a.city) - raw.findIndex(e => e.city === b.city));
+    console.log(data.filter(d => d.city === "Rome" || d.city === "Helsinki"));
+
+    const spec: TopLevelSpec = {
+        $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+        data: { values: data },
+        encoding: {
+            x: {
+                field: "city",
+                type: "ordinal",
+                axis: { gridDash: [4, 4] },
+                sort: { encoding: "text", field: "Country" }
+            },
+            y: {
+                field: "value",
+                aggregate: "sum",
+                type: "quantitative",
+                axis: { gridDash: [4, 4] }
+            },
+            color: {
+                field: "type",
+                scale: { range: ["#3481DD", "#DA2E64", "#73C64C"] },
+            },
+            order: { field: "typeOrder" }
+        },
+        mark: "bar",
+        width: 900,
+        height: 600,
+        title: {
+            text: "The most expensive cities in the world to buy real estate",
+            subtitle: "You can hover over the dots to find out more information",
+            align: "left",
+            anchor: "start"
+        },
+        config: {
+            legend: {
+                titleFontSize: 11,
+                labelFontSize: 11
+            },
+            title: {
+                fontSize: 14,
+                subtitleFontSize: 11
+            },
+            view: { stroke: null }
+        }
+    };
+
+    await compileAndSaveSpecs(spec, chartName);
 }
 
 async function main() {
@@ -255,6 +345,10 @@ async function main() {
 
     await representativeScatter();
     console.log("");
+
+    await priceChangeBarChart();
+    console.log("");
+
     log("done");
 }
 main();
