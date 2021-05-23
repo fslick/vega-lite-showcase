@@ -270,12 +270,14 @@ async function priceChangeBarChart() {
                 delta: fiveYearsDelta
             };
         }).sort((a, b) => b.value - a.value);
+
+    type ValueType = "base" | "increase" | "decrease";
     const bases =
         raw.map(r => {
             return {
                 city: r.city,
                 value: r.base,
-                type: "base",
+                type: "base" as ValueType,
                 typeOrder: 1
             };
         });
@@ -284,23 +286,40 @@ async function priceChangeBarChart() {
             return {
                 city: r.city,
                 value: Math.abs(r.delta),
-                type: r.delta > 0 ? "increase" : "decrease",
+                type: r.delta > 0 ? "increase" : "decrease" as ValueType,
                 typeOrder: 2
             };
         });
 
-    const data = [...bases, ...deltas].sort((a, b) => raw.findIndex(e => e.city === a.city) - raw.findIndex(e => e.city === b.city));
+    const data = [...bases, ...deltas];
     console.log(data.filter(d => d.city === "Rome" || d.city === "Helsinki"));
 
     const spec: TopLevelSpec = {
         $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-        data: { values: data },
+        layer: [{
+            data: { values: data.filter(d => d.type === "base") },
+            mark: {
+                type: "bar",
+                opacity: 1
+            }
+        }, {
+            data: { values: data.filter(r => r.type === "base" || r.type === "increase") },
+            mark: {
+                type: "bar",
+                opacity: 0.9
+            }
+        }, {
+            data: { values: data.filter(r => r.type === "base" || r.type === "decrease") },
+            mark: {
+                type: "bar",
+                opacity: 0.7
+            }
+        }],
         encoding: {
             x: {
                 field: "city",
                 type: "ordinal",
-                axis: { gridDash: [4, 4] },
-                sort: { encoding: "text", field: "Country" }
+                sort: null
             },
             y: {
                 field: "value",
@@ -310,11 +329,11 @@ async function priceChangeBarChart() {
             },
             color: {
                 field: "type",
+                // scale: { range: ["#3481DD", "#73C64C"] },
                 scale: { range: ["#3481DD", "#DA2E64", "#73C64C"] },
             },
             order: { field: "typeOrder" }
         },
-        mark: "bar",
         width: 900,
         height: 600,
         title: {

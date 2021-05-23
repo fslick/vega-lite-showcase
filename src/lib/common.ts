@@ -24,11 +24,11 @@ export async function createFolder(folderpath: string) {
     }
 }
 
-export async function parseCsvFile<T>(csvPath: string): Promise<T[]> {
+export async function parseCsvFile<T>(csvPath: string, separator = ","): Promise<T[]> {
     const results: T[] = [];
     return new Promise((resolve, reject) => {
         fs.createReadStream(csvPath)
-            .pipe(parse())
+            .pipe(parse({separator}))
             .on("data", (row) => {
                 results.push(row);
             })
