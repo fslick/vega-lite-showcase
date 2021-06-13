@@ -6,11 +6,13 @@
     "csv-parser": "^3.0.0",
     "emoji-flag": "^1.1.0",
     "moment": "^2.29.1",
+    "uuid": "^8.3.2",
     "vega": "^5.20.2",
     "vega-lite": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.41",
+    "@types/uuid": "^8.3.0",
     "typescript": "^4.2.4"
   }
 }

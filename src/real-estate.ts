@@ -1,5 +1,6 @@
+import { UnwrapArray, createFolder, log, overwriteFile, parseCsvFile } from "./lib/common";
+import { createHtmlFragment } from "./lib/html";
 import { Config, TopLevelSpec, compile } from "vega-lite";
-import {  UnwrapArray, createFolder, log, overwriteFile, parseCsvFile } from "./lib/common";
 import * as lookup from "country-code-lookup";
 import flag from "emoji-flag";
 
@@ -38,6 +39,11 @@ async function compileAndSaveSpecs(spec: TopLevelSpec, chartName: string) {
     const vegaSpecPath = `${folderpath}/${chartName}.vg.json`;
     await overwriteFile(vegaSpecPath, JSON.stringify(vegaSpec));
     log(`Vega spec: ${vegaSpecPath}`);
+
+    const htmlFragment = createHtmlFragment(vegaSpec);
+    const htmlFragmentPath = `${folderpath}/${chartName}.html`;
+    log(`HTML fragment: ${htmlFragmentPath}`);
+    await overwriteFile(htmlFragmentPath, htmlFragment);
 }
 
 async function interactiveChart() {
