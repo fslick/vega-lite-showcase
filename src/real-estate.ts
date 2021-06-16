@@ -298,7 +298,6 @@ async function priceChangeBarChart() {
         });
 
     const data = [...bases, ...deltas];
-    console.log(data.filter(d => d.city === "Rome" || d.city === "Helsinki"));
 
     const spec: TopLevelSpec = {
         $schema: "https://vega.github.io/schema/vega-lite/v5.json",
