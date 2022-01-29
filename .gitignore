@@ -9,5 +9,6 @@ Thumbs.db
 dist/**/*
 
 # Project-specific
-output/**/*
+/src/**/output/*
 !output/.gitkeep
+output/**/*

@@ -1,9 +1,11 @@
-import { UnwrapArray, createFolder, log, overwriteFile, parseCsvFile } from "./lib/common";
-import { createHtmlFragment } from "./lib/html";
+import { UnwrapArray, createFolder, log, overwriteFile, parseCsvFile } from "../lib/common";
+import { createHtmlFragment } from "../lib/html";
 import { Config, TopLevelSpec, compile } from "vega-lite";
 import * as lookup from "country-code-lookup";
 import flag from "emoji-flag";
+import path from "path";
 
+// Run this only with ts-node
 // Dataset: https://datahub.io/stellamaris.sotomayor/real_estate-prices-worldwide
 
 const projectName = "real-estate";
@@ -22,14 +24,15 @@ type Row = Record<Header, string>;
 let rows: Row[] | undefined = undefined
 async function parseCsv() {
     if (!rows) {
-        rows = await parseCsvFile<Row>("./data/real_estate.csv");
+        const filepath = path.join(__dirname, "data/real_estate.csv");
+        console.log(filepath);
+        rows = await parseCsvFile<Row>(filepath);
     }
     return rows;
 }
 
 async function compileAndSaveSpecs(spec: TopLevelSpec, chartName: string) {
-    const folderpath = `output/${projectName}`;
-    await createFolder(folderpath);
+    const folderpath = path.join(__dirname, "output");
 
     const vegaLiteSpecPath = `${folderpath}/${chartName}.vl.json`;
     await overwriteFile(vegaLiteSpecPath, JSON.stringify(spec));

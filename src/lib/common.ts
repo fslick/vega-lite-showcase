@@ -1,6 +1,7 @@
 import * as fs from "async-file";
 import moment from "moment";
 import parse from "csv-parser";
+import path from "path";
 
 export type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 
@@ -10,6 +11,9 @@ export function log(text: string) {
 }
 
 export async function overwriteFile(filepath: string, text: string) {
+    const folderpath = path.dirname(filepath);
+    await createFolder(folderpath);
+
     const fileExists = await fs.exists(filepath);
     if (!fileExists) {
         await fs.delete(filepath);
@@ -28,7 +32,7 @@ export async function parseCsvFile<T>(csvPath: string, separator = ","): Promise
     const results: T[] = [];
     return new Promise((resolve, reject) => {
         fs.createReadStream(csvPath)
-            .pipe(parse({separator}))
+            .pipe(parse({ separator }))
             .on("data", (row) => {
                 results.push(row);
             })
